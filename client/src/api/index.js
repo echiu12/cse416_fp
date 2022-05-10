@@ -5,7 +5,7 @@ axios.defaults.withCredentials = true;
 
 // Initialize API
 const api = axios.create({
-    baseURL: 'http://localhost:4000/api',
+    baseURL: 'http://209.151.151.110:4000/api',
 })
 
 const options = {
