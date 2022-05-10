@@ -17,7 +17,7 @@ export default function ViewMyProfile() {
     let profilePic = store.userProfile.profileImage;
 	console.log(store.userProfile);
     let userImage = "";
-    if(profilePic !== "http://localhost:4000/api/image/null") {
+    if(profilePic !== null) {
         userImage = <img src={profilePic} alt="" style={{ margin: '20px 0px 0px 0px', width: '250px', height: '250px', borderRadius: '50%' }}></img>
     } else {
         userImage = <AccountCircleRoundedIcon style={{ margin: '20px 0px 0px 0px', fontSize: '300px' }} />;

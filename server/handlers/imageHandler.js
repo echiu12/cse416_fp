@@ -47,9 +47,14 @@ const upload = multer({storage: storage})
 // }
 
 const generateImageUrl = (imageId) => {
-	const ip = process.env.IP
-	const port = process.env.PORT
-	return `http://${ip}:${port}/api/image/${imageId}`
+	if (imageid) {
+		const ip = process.env.IP
+		const port = process.env.PORT
+		return `http://${ip}:${port}/api/image/${imageId}`
+	}
+	else {
+		return null
+	}
 }
 
 const parseImageId = (image) => {
