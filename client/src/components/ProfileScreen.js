@@ -43,7 +43,7 @@ export default function ProfileScreen() {
 
             let image = store.userProfile.profileImage;
             let length = store.userProfile.profileImage.length;
-            if(store.userProfile.profileImage === "http://localhost:4000/api/image/null") {
+            if(store.userProfile.profileImage === null) {
                 setProfileImage(null);
             } else {
                 setProfileImage(image);

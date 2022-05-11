@@ -42,7 +42,7 @@ export default function NavigationBar() {
     }
     else {
         let profilePicture = "";
-        if(auth.user.profileImage === null || auth.user.profileImage === undefined || auth.user.profileImage === "http://localhost:4000/api/image/null") {
+        if(auth.user.profileImage === null || auth.user.profileImage === undefined) {
             profilePicture = <AccountCircleRoundedIcon onClick={handleProfileMenuOpen} style={{ cursor: 'pointer', color: 'white', fontSize: '45px' }}></AccountCircleRoundedIcon>; 
         } else {
             let image = auth.user.profileImage;
