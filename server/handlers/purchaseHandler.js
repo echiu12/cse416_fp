@@ -7,6 +7,19 @@ dotenv.config()
 // COINGATE CLIENT
 const coingateClient = testClient(process.env.COINGATE_AUTH);
 
+generateInvoiceDescription = async (purchase) => {
+    return await purchase.productIds.reduce(async (memo, productId) => {
+        const product = await Product.findById(productId)
+        const description = await memo;
+        if (description === "") {
+            return `${product.name}`
+        }
+        else {
+            return (await memo) + `, ${product.name}`
+        }
+    }, "")
+}
+
 createPurchase = async (user, price_amount, price_currency, receive_currency) => {
 	let purchase = null
 	try {
@@ -18,16 +31,18 @@ createPurchase = async (user, price_amount, price_currency, receive_currency) =>
 
         console.log(`CALLBACK URL: ${process.env.COINGATE_CALLBACK_URL}`)
 
+        const invoiceDescription = await generateInvoiceDescription(purchase)
+
 		const invoice = await coingateClient.createOrder({
 			order_id: purchase._id,
 			price_amount: price_amount,
 			price_currency: price_currency,
 			receive_currency: receive_currency,
 			title: `Cryptorium OrderId#${purchase._id}`,
-			description: "TEMP DESCRIPTION",
+			description: invoiceDescription,
 			callback_url: process.env.COINGATE_CALLBACK_URL,
-			cancel_url: "https://www.yahoo.com",
-			success_url: "https://www.google.com",
+			cancel_url: "https://cryptorium.herokuapp.com",
+			success_url: "https://cryptorium.herokuapp.com/thankyou",
 			purchaser_email: user.email,
 		})
 		
