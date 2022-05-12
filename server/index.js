@@ -12,7 +12,7 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors({
-    origin: ["http://localhost:3000"],
+    origin: ["https://cryptorium.herokuapp.com"],
     credentials: true
 }))
 app.use(bodyParser.json());

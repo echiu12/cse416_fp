@@ -5,7 +5,7 @@ axios.defaults.withCredentials = true;
 
 // Initialize API
 const api = axios.create({
-    baseURL: 'http://209.151.151.110:4000/api',
+    baseURL: 'https://echiu.cse356.compas.cs.stonybrook.edu/api',
 })
 
 const options = {
