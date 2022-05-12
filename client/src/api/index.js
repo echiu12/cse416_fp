@@ -49,7 +49,8 @@ export const removeWallet = (payload) => api.post('/wallet/removeWallet', payloa
 export const getWallets = () => api.post('/wallet/getWallets');
 
 // ALL REQUESTS FOR CHECKOUT
-export const purchaseFromCart = () => api.post('/purchase/purchaseFromCartTest');
+// export const purchaseFromCart = () => api.post('/purchase/purchaseFromCartTest');
+export const purchaseFromCart = () => api.post('/purchase/purchaseFromCart');
 
 
 const apis = {
