@@ -1,6 +1,7 @@
 const dotenv = require('dotenv')
 const { client, testClient, Client, Config } = require('coingate-v2');
 const { Purchase, PurchaseState } = require('../models/purchaseModel')
+const { Product, ProductState } = require('../models/productModel')
 
 dotenv.config()
 
@@ -8,16 +9,21 @@ dotenv.config()
 const coingateClient = testClient(process.env.COINGATE_AUTH);
 
 generateInvoiceDescription = async (purchase) => {
-    return await purchase.productIds.reduce(async (memo, productId) => {
-        const product = await Product.findById(productId)
-        const description = await memo;
-        if (description === "") {
-            return `${product.name}`
-        }
-        else {
-            return (await memo) + `, ${product.name}`
-        }
-    }, "")
+    try {
+        return await purchase.productIds.reduce(async (memo, productId) => {
+            const product = await Product.findById(productId)
+            const description = await memo;
+            if (description === "") {
+                return `${product.name}`
+            }
+            else {
+                return (await memo) + `, ${product.name}`
+            }
+        }, "")
+    }
+    catch (err) {
+        return ""
+    }
 }
 
 createPurchase = async (user, price_amount, price_currency, receive_currency) => {
