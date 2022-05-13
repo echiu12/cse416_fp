@@ -72,7 +72,7 @@ export default function ProductPage() {
 
 	/* IMAGES ON CLICK */
     const handleImage = (event) => {
-        setItemImage0(itemImages[event.target.id]);
+        setItemImage0(itemImages[event.target.id.substring(6,7)]);
     };
 
 	// ADD TO CART BUTTON
@@ -100,13 +100,27 @@ export default function ProductPage() {
 		}
     };
 
+	const handleItemHover = (id) => {
+		let item = document.getElementById(id);
+        let border = "#FFBD59 2px solid";
+        item.style.border = border;
+	}
+
+	const handleItemLeave = (id) => {
+		let item = document.getElementById(id);
+        let border = "black 2px solid";
+        item.style.border = border;
+	}
+
 	let showImages = 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(100px, 1fr))' }}>
             {itemImages.map((index, indexNum) => (
                 index? 
-                    <div key={indexNum} style={{cursor: "pointer", margin: '10px' }}>
-                        <img id={indexNum} src={index} alt="" 
-                        onClick={handleImage} title={index.title} width="100px" height="100px" style={{ borderRadius: '10%', border: "black 2px solid" }} ></img>
+                    <div key={indexNum} style={{margin: '10px' }}>
+                        <img id={"propic" + indexNum} src={index} alt="" 
+                        onClick={e => { handleImage(e) }} title={index.title} width="100px" height="100px" style={{ cursor: "pointer", borderRadius: '10%', border: "black 2px solid" }} 
+						onMouseEnter={e => { handleItemHover("propic" + indexNum)}}
+						onMouseLeave={e => { handleItemLeave("propic" + indexNum)}}></img>
                     </div>:<div key={indexNum}></div>
             ))}
         </div>;
