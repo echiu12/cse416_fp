@@ -328,6 +328,16 @@ export default function ListItem(){
 			// const element7 = document.getElementById('image7')
 			// const file7 = element7.files[0]
 
+			// HTML file input, chosen by user
+			// formData.append("image0", file0);
+			// formData.append("image1", file1);
+			// formData.append("image2", file2);
+			// formData.append("image3", file3);
+			// formData.append("image4", file4);
+			// formData.append("image5", file5);
+			// formData.append("image6", file6);
+			// formData.append("image7", file7);
+
 			let index = 0;
 			for(let i = 0; i < 8; i++) {
 				let str = "image" + i
@@ -348,15 +358,6 @@ export default function ListItem(){
 				}
 			}
 
-			// HTML file input, chosen by user
-			// formData.append("image0", file0);
-			// formData.append("image1", file1);
-			// formData.append("image2", file2);
-			// formData.append("image3", file3);
-			// formData.append("image4", file4);
-			// formData.append("image5", file5);
-			// formData.append("image6", file6);
-			// formData.append("image7", file7);
 			const response = await api.addListingProduct(formData);
 			if(response.data.status === "OK") {
 				const id = response.data.product._id;

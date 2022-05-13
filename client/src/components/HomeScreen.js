@@ -88,11 +88,11 @@ export default function HomeScreen() {
     }
     let margin = 0;
     if(numPages === 3) {
-        margin = 51;
+        margin = 45;
     } else if (numPages === 2) {
-        margin = 34;
+        margin = 30;
     } else if (numPages === 1) {
-        margin = 17;
+        margin = 15;
     }
     let dotMarginRight = "-" + margin.toString() + "px";
 
