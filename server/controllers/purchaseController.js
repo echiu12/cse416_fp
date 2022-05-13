@@ -104,7 +104,7 @@ removeFromCart = async (req, res) => {
 
 //TODO
 purchaseFromCart = async (req, res) => {
-	console.log("purchaseFromCartTest", req.body)
+	console.log("purchaseFromCart", req.body)
 	const userId = req.userId
 	
 	let json = {}
@@ -130,6 +130,7 @@ purchaseFromCart = async (req, res) => {
 			json = {status: constants.status.ERROR, errorMessage: constants.purchase.failedToReserveCartProducts}
 		}
 		else if (reservedProductIds.length === 0) {
+            console.log("RESERVED PRODUCT IDS: ", reservedProductIds)
 			json = {status: constants.status.ERROR, errorMessage: constants.purchase.noProductsWereReserved}
 		}
 		else if (0 >= (price_amount = await calculatePriceOfReserved(user.username))) {
@@ -148,7 +149,6 @@ purchaseFromCart = async (req, res) => {
 				_id: 1,
 				name: 1,
 				price: 1,
-				shippingPrice: 1,
 				sellerUsername: 1,
 				imageIds: 1,
 				dateListed: "$createdAt"
@@ -223,7 +223,7 @@ purchaseCallback = async (req, res) => {
 }
 
 getPendingPurchasesForUser = async (req, res) => {
-	console.log("getSellingProductsForUser", req.body)
+	console.log("getPendingProductsForUser", req.body)
 	const userId = req.userId
 
 	let user = null
@@ -251,7 +251,6 @@ getPendingPurchasesForUser = async (req, res) => {
 				_id: 1,
 				name: 1,
 				price: 1,
-				shippingPrice: 1,
 				sellerUsername: 1,
 				imageIds: 1,
 				dateListed: "$createdAt",
@@ -299,6 +298,8 @@ purchaseFromCartTest = async (req, res) => {
 			json = {status: constants.status.ERROR, errorMessage: constants.purchase.couldNotGetCartItems}
 		}
 		else if (! ({reservedProductIds, failedToReserveIds} = await reserveCartProducts(user.username))) {
+            console.log("RESERVED PRODUCT IDS", reservedProductIds)
+            console.log("FAILED TO RESREVE PRODUCT IDS", failedToReserveIds)
 			json = {status: constants.status.ERROR, errorMessage: constants.purchase.failedToReserveCartProducts}
 		}
 		else if (reservedProductIds.length === 0) {

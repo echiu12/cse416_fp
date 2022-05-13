@@ -12,6 +12,7 @@ const OrderSchema = new Schema(
 	{
 		buyerUsername: {type: String, required: true},
 		productId: {type: ObjectId, required: true},
+        shippingPrice: {type: Number, require: true},
 		state: {type: String, default: OrderState.PENDING}
 	},
 	{ timestamps: true },

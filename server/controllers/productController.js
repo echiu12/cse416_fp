@@ -474,9 +474,6 @@ addListingProduct = async (req, res) => {
 				json = { status: constants.status.ERROR, errorMessage: constants.product.userDoesNotExist }
 			}
 			else {
-				// TODO: Calculate shipping price via api
-				const shippingPrice = boxLength * boxWidth * boxHeight * boxWeight
-
 				let product = new Product({
 					name: name,
 					description: description,
@@ -484,7 +481,7 @@ addListingProduct = async (req, res) => {
 					category: category,
 					sellerUsername: user.username,
 					price: price,
-					shippingPrice: shippingPrice,
+					shippingPrice: 0,
 					boxLength: boxLength,
 					boxWidth: boxWidth,
 					boxHeight: boxHeight,
@@ -556,9 +553,6 @@ updateListingProduct = async (req, res) => {
 				json = {status: constants.status.ERROR, errorMessage: constants.product.productIsSold}
 			}
 			else {
-				// TODO: Calculate shipping price via api
-				const shippingPrice = boxLength * boxWidth * boxHeight * boxWeight
-
 				product.name = name
 				product.description = description
 				product.condition = condition
@@ -568,7 +562,7 @@ updateListingProduct = async (req, res) => {
 				product.boxWidth = boxWidth
 				product.boxHeight = boxHeight
 				product.boxWeight = boxWeight
-				product.shippingPrice = shippingPrice
+				product.shippingPrice = 0
 
 				// ADD IMAGE FILES
 				product.imageIds = await updateProductImageFields(images, [...product.imageIds], _id)
@@ -643,94 +637,24 @@ getShippingPrice = async (req, res) => {
 	const _id = req.body._id; //product id
 	const userId = req.userId;
 
-	let json = {};
-	let seller = null;
-	let buyer=null;
-	let product=null
-
+	let json = {}
+    let user = null
+    let shippingData = null
 	try {
 		if (!userId) {
 			throw "did not get a userId"
 		}
-
-		else if (!(buyer = await User.findOne({ "_id": userId }))) {
-			json = { status: constants.status.ERROR, errorMessage: constants.product.userDoesNotExist };
-						console.log("RESPONSE: ", json);
-			return res.status(200).json(json).send();
-		}
-		else if (!(product = await Product.findOne({ "_id": _id }))) {
-			json = { status: constants.status.ERROR, errorMessage: constants.product.productDoesNotExist }
-			return res.status(200).json(json).send();
-		}
-		else if (!(seller = await User.findOne({ "username": product.sellerUsername }))) {
-			json = { status: constants.status.ERROR, errorMessage: constants.product.userDoesNotExist };
-			onsole.log("RESPONSE: ", json);
-			return res.status(200).json(json).send();
-		}
-		let zipDestination=buyer.zipcode;
-		let zipOrigination=seller.zipcode;
-		let boxWeight=product.boxWeight;
-		let boxWidth=product.boxWidth;
-		let boxLength=product.boxLength;
-		let boxHeight=product.boxHeight;
-		var xml =`<RateV4Request USERID="726CRYPT0533">
-        <Revision></Revision>
-        <Package ID="0">
-        <Service>PRIORITY</Service>
-        <ZipOrigination>${zipOrigination}</ZipOrigination>
-        <ZipDestination>${zipDestination}</ZipDestination>
-        <Pounds>${boxWeight}</Pounds>
-        <Ounces>0</Ounces>
-        <Container></Container>
-        <Width>${boxWidth}</Width>
-        <Length>${boxLength}</Length>
-        <Height>${boxHeight}</Height>
-        <Girth></Girth>
-        <Machinable>TRUE</Machinable>
-        </Package>
-        </RateV4Request>`;
-		
-		let response = await axios.get('https://secure.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=' + xml, {
-			headers: {
-				'Content-Type': 'application/xml',
-			},
-		})
-		
-
-		if (!(response)) {
-			json = { status: constants.status.ERROR, errorMessage: constants.product.failedToGetShippingPrice };
-			console.log("RESPONSE: ", json);
-			return res.status(200).json(json).send();
-		}
-		let parser=new xml2js.Parser();
-		parser.parseString(response.data, function (err, result) {
-
-			if (err) {
-				json = { status: constants.status.ERROR, errorMessage: err };
-			}
-			else if (result.Error) {
-				json = { status: constants.status.ERROR, errorMessage: result.Error.Description };
-			}
-			else if (result["RateV4Response"]["Package"][0]["Error"]) {
-				json = { status: constants.status.ERROR, errorMessage: result["RateV4Response"]["Package"][0]["Error"][0].Description };
-			}
-			else {
-				let detail = result["RateV4Response"]["Package"][0]["Postage"][0];
-				let price=detail["Rate"][0];
-				let service=detail["MailService"][0];
-				let index=service.indexOf("&");
-				if (index!=-1){
-					service=service.substring(0,index);
-				}
-				let algo=1.35692;
-				json = {
-					status: constants.status.OK,
-					shippingPrice: price*algo,
-					shippingService: service
-				}
-			}
-
-		});
+        else if (!(user = await User.findById(userId))) {
+            json = {status: constants.status.ERROR, errorMessage: `failed to find buyer with userId ${userId}`}
+        }
+        else {
+            const {price, service} = await calculateShippingPrice(user.username, _id) 
+            json = {
+                status: constants.status.OK,
+                shippingPrice: price,
+                shippingService: service,
+            }
+        }
 		console.log("RESPONSE: ", json);
 		res.status(200).json(json).send();
 	}
