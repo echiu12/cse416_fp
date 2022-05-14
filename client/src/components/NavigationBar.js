@@ -46,7 +46,7 @@ export default function NavigationBar() {
             profilePicture = <AccountCircleRoundedIcon onClick={handleProfileMenuOpen} style={{ cursor: 'pointer', color: 'white', fontSize: '45px', padding: '10px' }}></AccountCircleRoundedIcon>; 
         } else {
             let image = auth.user.profileImage;
-            profilePicture = <img src={image} alt={<AccountCircleRoundedIcon style={{ cursor: 'pointer', color: 'white', fontSize: '45px', padding: '10px' }}></AccountCircleRoundedIcon>} onClick={handleProfileMenuOpen} style={{ cursor: 'pointer', width: '45px', height: '45px', border: 'white 1px solid', borderRadius: '50%'}}/>
+            profilePicture = <img src={image} alt={<AccountCircleRoundedIcon style={{ cursor: 'pointer', color: 'white', fontSize: '45px', padding: '10px' }}></AccountCircleRoundedIcon>} onClick={handleProfileMenuOpen} style={{ cursor: 'pointer', margin: '7px 0 0 0', width: '45px', height: '45px', border: 'white 1px solid', borderRadius: '50%'}}/>
         }
         navBarLoggedIn = 
         <Box style={{ display: 'flex', float: 'right', margin: '60px 1vw 0px 7vw' }}>
