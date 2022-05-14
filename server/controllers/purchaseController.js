@@ -1,7 +1,7 @@
 const constants = require('./constants.json')
 const {Product, ProductState} = require('../models/productModel')
 const User = require('../models/userModel')
-const { createPurchase } = require('../handlers/purchaseHandler')
+const { createPurchase, getConversion } = require('../handlers/purchaseHandler')
 const { calculatePriceOfReserved, reserveCartProducts, unreserveProducts } = require('./helpers/purchaseControllerHelper')
 const { getProducts, getProductFirstImage } = require('./helpers/productControllerHelper')
 const dotenv = require('dotenv')
@@ -116,6 +116,10 @@ purchaseFromCart = async (req, res) => {
 	const price_currency = 'USD'
 	const receive_currency = 'BTC'
 	const invoice = null
+    const conversion = await getConversion("ALGO", "USD")
+
+    console.log("CONVERSION: ", conversion)
+
 	try {
 		if (!userId) {
 			throw constants.error.didNotGetUserId
@@ -133,12 +137,12 @@ purchaseFromCart = async (req, res) => {
             console.log("RESERVED PRODUCT IDS: ", reservedProductIds)
 			json = {status: constants.status.ERROR, errorMessage: constants.purchase.noProductsWereReserved}
 		}
-		else if (0 >= (price_amount = await calculatePriceOfReserved(user.username))) {
+		else if (0 >= (price_amount = await calculatePriceOfReserved(reservedProductIds))) {
             console.log(`INVALID PRICE AMOUNT; UNRESERVING ITEMS: ${reservedProductIds}`)
 			await unreserveProducts(user.username, reservedProductIds)
             json = {status: constants.status.ERROR, errorMessage: constants.purchase.failedToCalculatePrice}
 		}
-		else if (! (purchase = await createPurchase(user, price_amount, price_currency, receive_currency))) {
+		else if (! (purchase = await createPurchase(user, price_amount / conversion, price_currency, receive_currency))) {
 			console.log(`INVOICE CREATION FAILED; UNRESERVING ITEMS: ${reservedProductIds}`)
 			await unreserveProducts(user.username, reservedProductIds)
 			json = {status: constants.status.ERROR, errorMessage: constants.purchase.failedToCreateInvoice}

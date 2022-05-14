@@ -5,14 +5,23 @@ const { Purchase, PurchaseState } = require("../../models/purchaseModel")
 const User = require("../../models/userModel")
 const axios = require('axios')
 const xml2js = require('xml2js')
+const constants = require('../constants.json')
 
-calculatePriceOfReserved = async (username) => {
-	const reservations = await Order.find({ buyerUsername: username, state: OrderState.PENDING })
-    const price = await reservations.reduce(async (memo, reservation) => {
-        const product = await Product.findById(reservation.productId)
-        console.log("GOT PRODUCT: ", product)
-        return (await memo) + product.price + reservation.shippingPrice
+calculatePriceOfReserved = async (reservedProductIds) => {
+    const price = await reservedProductIds.reduce(async (memo, productId) => {
+        const order = await Order.findOne({productId: productId, state: OrderState.PENDING})
+        const product = await Product.findById(productId)
+        console.log("ORDER: ", order)
+        console.log("PRODUCT: ", product)
+        return (await memo) + product.price + order.shippingPrice
     }, 0)
+
+	// const reservations = await Order.find({ buyerUsername: username, state: OrderState.PENDING })
+    // const price = await reservations.reduce(async (memo, reservation) => {
+    //     const product = await Product.findById(reservation.productId)
+    //     console.log("GOT PRODUCT: ", product)
+    //     return (await memo) + product.price + reservation.shippingPrice
+    // }, 0)
 	console.log("CALCULATED PRICE: ", price)
 	return price
 }

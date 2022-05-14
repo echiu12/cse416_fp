@@ -2,6 +2,7 @@ const dotenv = require('dotenv')
 const { client, testClient, Client, Config } = require('coingate-v2');
 const { Purchase, PurchaseState } = require('../models/purchaseModel')
 const { Product, ProductState } = require('../models/productModel')
+const sdk = require('api')('@wyre-hub/v4#2vj9qg38l33twf3q');
 
 dotenv.config()
 
@@ -71,7 +72,22 @@ createPurchase = async (user, price_amount, price_currency, receive_currency) =>
 	return purchase
 }
 
+getConversion = async (from, to) => {
+    try {
+        console.log("FROM: ", from)
+        console.log("TO: ", to)
+        const exchangeRates = await sdk.GetExchangeRates()
+        console.log("EXCHANGE RATES: ", exchangeRates)
+        return exchangeRates[from+to]
+    }
+    catch(err) {
+        console.log(err)
+        return 1
+    }
+}
+
 module.exports = {
 	coingateClient,
 	createPurchase,
+    getConversion,
 }
