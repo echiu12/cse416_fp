@@ -293,7 +293,8 @@ function RegisterModal() {
 					id="phoneNumber"
 					label="Phone Number"  
 					value={phoneNumber} 
-					onChange={(event) => { setPhoneNumber(event.target.value) }}
+					// onChange={(event) => { setPhoneNumber(event.target.value) }}
+					onValueChange={(values) => { setPhoneNumber(values.value) }}
 					style={{ paddingLeft: '10px', marginTop: '15px', float: 'left', width: '495px', height: '45px', borderRadius: '3px', fontFamily: 'Quicksand', fontSize: '20px' }}/>
 				
 					{registerAlert}
