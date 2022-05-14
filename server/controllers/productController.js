@@ -1,5 +1,5 @@
-const { upload } = require("../handlers/imageHandler")
-const {Product, ProductState} = require("../models/productModel")
+const { upload, createAndSaveImage } = require("../handlers/imageHandler")
+const { Product, ProductState } = require("../models/productModel")
 const User = require('../models/userModel')
 const Review = require('../models/reviewModel')
 const constants = require('./constants.json')
@@ -7,6 +7,7 @@ const xml2js = require('xml2js')
 const axios = require("axios")
 const Cart = require('../models/cartModel')
 const { Order, OrderState} = require('../models/orderModel')
+const {ObjectId} = require('mongodb');
 
 const {
 	productImageMiddleware,
@@ -17,73 +18,92 @@ const {
 } = require('./helpers/productControllerHelper')
 
 getCatalog = async (req, res) => {
-	console.log("getCatalog", req.body)
+	console.log("getCatalog2", req.body)
+	const { search, categories, conditions, minPrice, maxPrice, sortBy } = req.body
 
-	const {search, categories, conditions, minPrice, maxPrice, sortBy} = req.body
+	products = await Product.find().lean();
+	product_titles = products.map(product => product.name);
+	product_ids = products.map(product => product._id.toString());
+	let response = null
+	if (search) { //return all products if search==""
+		try {
+			response = await axios.post('http://localhost:5000/search',
+				{
+					search: search,
+					product_titles: product_titles,
+					product_ids: product_ids
+				},
+				{
+					headers: {
+						'Content-Type': 'application/json',
+					}
 
-	let searchWords = search ? search.split(" ") : []
+				})
+		}
+		catch (err) {
+			console.log(err)
+			return res.status(500).send({ status: constants.status.FATAL_ERROR })
+		}
 
-	// TODO: filter out common words
-
-	// TODO: allow search through product descriptions
-
-	let productQuery = {}
-
-	let productQueryArray = []
-
-	let searchQuery = []
-	const searchKeys = [
-		"name", "description"
-	]
-	const searchOptions = "i"
-	for (const searchWord of searchWords) {
-		for (const searchKey of searchKeys) {
-			searchQuery.push({ [searchKey]: new RegExp(searchWord, searchOptions) })
+		if (!(response)) {
+			json = { status: constants.status.ERROR, errorMessage: constants.product.failToGetSearchApi };
+			console.log("RESPONSE: ", json);
+			return res.status(200).json(json).send();
+		}
+		else if (response.data.status == constants.status.ERROR) {
+			json = { status: constants.status.ERROR, errorMessage: response.errorMessage };
+			console.log("RESPONSE: ", json);
+			return res.status(200).json(json).send();
+		}
+		else {
+			product_ids = response.data.product_ids;
+			product_titles = response.data.product_titles;
+			console.log(product_ids, product_titles);
 		}
 	}
-	if (searchQuery.length > 0) {
-		productQueryArray.push({$or: searchQuery})
-	}
+
+	let productQuery = {}
+	let productQueryArray = [{ '_id': { $in: product_ids } }]
 
 	let categoryQuery = []
 	if (categories && (categories.length > 0)) {
-		for(const category of categories) {
-			categoryQuery.push({category: category})
+		for (const category of categories) {
+			categoryQuery.push({ category: category })
 		}
-		productQueryArray.push({$or: categoryQuery})
+		productQueryArray.push({ $or: categoryQuery })
 	}
 
 	let conditionQuery = []
 	if (conditions && (conditions.length > 0)) {
-		for(const condition of conditions) {
-			conditionQuery.push({condition: condition})
+		for (const condition of conditions) {
+			conditionQuery.push({ condition: condition })
 		}
-		productQueryArray.push({$or: conditionQuery})
+		productQueryArray.push({ $or: conditionQuery })
 	}
 
 	const isMinPriceDefined = typeof minPrice !== 'undefined'
 	const isMaxPriceDefined = typeof maxPrice !== 'undefined'
 	if (isMinPriceDefined && isMaxPriceDefined) {
-		productQueryArray.push({price: {$gte: minPrice, $lte: maxPrice}})
+		productQueryArray.push({ price: { $gte: minPrice, $lte: maxPrice } })
 	}
 	else if (isMinPriceDefined) {
-		productQueryArray.push({price: {$gte: minPrice}})
+		productQueryArray.push({ price: { $gte: minPrice } })
 	}
 	else if (isMaxPriceDefined) {
-		productQueryArray.push({price: {$lte: maxPrice}})
+		productQueryArray.push({ price: { $lte: maxPrice } })
 	}
 
 	/** Insert additional checks for products here */
 
-	productQueryArray.push({state: ProductState.LISTED})
+	productQueryArray.push({ state: ProductState.LISTED })
 
 	if (productQueryArray.length > 0)
 		productQuery.$and = productQueryArray
 
-	console.log("PRODUCT QUERY: ", productQuery)
-	console.dir(productQuery, {depth: null})
+	console.log("PRODUCT QUERY: ", JSON.stringify(productQuery));
+	//console.dir(productQuery, { depth: null })
 
-	sortQuery = {}
+	let sortQuery={}; 
 	if (sortBy === "DATE_DESCENDING") { // NEWEST TO OLDEST
 		sortQuery = { createdAt: -1 }
 	}
@@ -107,16 +127,15 @@ getCatalog = async (req, res) => {
 		imageIds: 1,
 		dateListed: "$createdAt"
 	}
-
-	let json = {}
-	let products = {}
 	try {
 		products = await Product
 			.find(productQuery)
 			.lean()
 			.sort(sortQuery)
-			.select(productSelect)
-
+			.select(productSelect);
+		products.sort(function(a,b){
+			return product_ids.indexOf(a._id.toString())-product_ids.indexOf(b._id.toString())
+		});
 		products = await Promise.all(products.map(async (product) => {
 			const image = await getProductFirstImage(product);
 			product.image = image
@@ -133,7 +152,126 @@ getCatalog = async (req, res) => {
 		console.log(err)
 		res.status(500).send({ status: constants.status.FATAL_ERROR })
 	}
+
 }
+// getCatalog = async (req, res) => {
+// 	console.log("getCatalog", req.body)
+
+// 	const { search, categories, conditions, minPrice, maxPrice, sortBy } = req.body
+
+// 	let searchWords = search ? search.split(" ") : []
+
+// 	// TODO: filter out common words
+
+// 	// TODO: allow search through product descriptions
+
+// 	let productQuery = {}
+
+// 	let productQueryArray = []
+
+// 	let searchQuery = []
+// 	const searchKeys = [
+// 		"name", "description"
+// 	]
+// 	const searchOptions = "i"
+// 	for (const searchWord of searchWords) {
+// 		for (const searchKey of searchKeys) {
+// 			searchQuery.push({ [searchKey]: new RegExp(searchWord, searchOptions) })
+// 		}
+// 	}
+// 	if (searchQuery.length > 0) {
+// 		productQueryArray.push({ $or: searchQuery })
+// 	}
+
+// 	let categoryQuery = []
+// 	if (categories && (categories.length > 0)) {
+// 		for (const category of categories) {
+// 			categoryQuery.push({ category: category })
+// 		}
+// 		productQueryArray.push({ $or: categoryQuery })
+// 	}
+
+// 	let conditionQuery = []
+// 	if (conditions && (conditions.length > 0)) {
+// 		for (const condition of conditions) {
+// 			conditionQuery.push({ condition: condition })
+// 		}
+// 		productQueryArray.push({ $or: conditionQuery })
+// 	}
+
+// 	const isMinPriceDefined = typeof minPrice !== 'undefined'
+// 	const isMaxPriceDefined = typeof maxPrice !== 'undefined'
+// 	if (isMinPriceDefined && isMaxPriceDefined) {
+// 		productQueryArray.push({ price: { $gte: minPrice, $lte: maxPrice } })
+// 	}
+// 	else if (isMinPriceDefined) {
+// 		productQueryArray.push({ price: { $gte: minPrice } })
+// 	}
+// 	else if (isMaxPriceDefined) {
+// 		productQueryArray.push({ price: { $lte: maxPrice } })
+// 	}
+
+// 	/** Insert additional checks for products here */
+
+// 	productQueryArray.push({ state: ProductState.LISTED })
+
+// 	if (productQueryArray.length > 0)
+// 		productQuery.$and = productQueryArray
+
+// 	console.log("PRODUCT QUERY: ", productQuery)
+// 	console.dir(productQuery, { depth: null })
+
+// 	sortQuery = {}
+// 	if (sortBy === "DATE_DESCENDING") { // NEWEST TO OLDEST
+// 		sortQuery = { createdAt: -1 }
+// 	}
+// 	else if (sortBy === "DATE_ASCENDING") { // OLDEST TO NEWEST
+// 		sortQuery = { createdAt: 1 }
+// 	}
+// 	else if (sortBy === "PRICE_ASCENDING") {
+// 		sortQuery = { price: 1 }
+// 	}
+// 	else if (sortBy === "PRICE_DESCENDING") {
+// 		sortQuery = { price: -1 }
+// 	}
+// 	console.log("SORT QUERY: ", sortQuery)
+
+// 	const productSelect = {
+// 		_id: 1,
+// 		name: 1,
+// 		price: 1,
+// 		shippingPrice: 1,
+// 		sellerUsername: 1,
+// 		imageIds: 1,
+// 		dateListed: "$createdAt"
+// 	}
+
+// 	let json = {}
+// 	let products = {}
+// 	try {
+// 		products = await Product
+// 			.find(productQuery)
+// 			.lean()
+// 			.sort(sortQuery)
+// 			.select(productSelect)
+
+// 		products = await Promise.all(products.map(async (product) => {
+// 			const image = await getProductFirstImage(product);
+// 			product.image = image
+// 			delete product.imageIds
+
+// 			return product;
+// 		}))
+
+// 		json = { status: constants.status.OK, products: products }
+// 		console.log("RESPONSE: ", json)
+// 		res.status(200).json(json)
+// 	}
+// 	catch (err) {
+// 		console.log(err)
+// 		res.status(500).send({ status: constants.status.FATAL_ERROR })
+// 	}
+// }
 
 getProduct = async (req, res) => {
 	console.log("getProduct", req.body)
@@ -157,25 +295,27 @@ getProduct = async (req, res) => {
 			json = { status: constants.status.ERROR, errorMessage: constants.product.failedToGetImages }
 		}
 		else {
-			const isSold = ! (product.state === ProductState.LISTED)
+			const isSold = !(product.state === ProductState.LISTED)
 
-			json = {status: constants.status.OK, product: {
-				_id: _id,
-				name: product.name,
-				description: product.description,
-				condition: product.condition,
-				category: product.category,
-				sellerUsername: product.sellerUsername,
-				isSold: isSold,
-				price: product.price,
-				shippingPrice: product.shippingPrice,
-				boxLength: product.boxLength,
-				boxWidth: product.boxWidth,
-				boxHeight: product.boxHeight,
-				boxWeight: product.boxWeight,
-				review: review,
-				images: images,
-			}}
+			json = {
+				status: constants.status.OK, product: {
+					_id: _id,
+					name: product.name,
+					description: product.description,
+					condition: product.condition,
+					category: product.category,
+					sellerUsername: product.sellerUsername,
+					isSold: isSold,
+					price: product.price,
+					shippingPrice: product.shippingPrice,
+					boxLength: product.boxLength,
+					boxWidth: product.boxWidth,
+					boxHeight: product.boxHeight,
+					boxWeight: product.boxWeight,
+					review: review,
+					images: images,
+				}
+			}
 		}
 		console.log("RESPONSE: ", json)
 		res.status(200).json(json)
@@ -212,9 +352,9 @@ getOrderedProductsForUser = async (req, res) => {
 				reviewId: 1
 			}
 
-			let products = await Product.find({state: ProductState.SOLD, buyerUsername: user.username})
+			let products = await Product.find({ state: ProductState.SOLD, buyerUsername: user.username })
 				.lean().select(selectOptions)
-			
+
 			products = await Promise.all(products.map(async (product) => {
 				const image = await getProductFirstImage(product);
 				product.image = image
@@ -338,8 +478,8 @@ getListingProductsForUser = async (req, res) => {
 			const findOptions = {
 				sellerUsername: user.username,
 				$or: [
-					{state: ProductState.LISTED},
-					{state: ProductState.SOLD}
+					{ state: ProductState.LISTED },
+					{ state: ProductState.SOLD }
 				]
 			}
 
@@ -413,8 +553,8 @@ getSellingProductsForUser = async (req, res) => {
 				dateListed: "$createdAt"
 			}
 
-			let products = await Product.find({sellerUsername: user.username, state: ProductState.LISTED}).lean().select(selectOptions)
-			
+			let products = await Product.find({ sellerUsername: user.username, state: ProductState.LISTED }).lean().select(selectOptions)
+
 			products = await Promise.all(products.map(async (product) => {
 				const image = await getProductFirstImage(product);
 				product.image = image
@@ -550,7 +690,7 @@ updateListingProduct = async (req, res) => {
 				json = { status: constants.status.ERROR, errorMessage: constants.product.youAreNotTheSeller }
 			}
 			else if (product.state !== ProductState.LISTED) {
-				json = {status: constants.status.ERROR, errorMessage: constants.product.productIsSold}
+				json = { status: constants.status.ERROR, errorMessage: constants.product.productIsSold }
 			}
 			else {
 				product.name = name
@@ -667,7 +807,7 @@ getShippingPrice = async (req, res) => {
 // TODO
 getShippingInfo = async (req, res) => {
 	console.log("getShippingInfo", req.body)
-	const {productId} = req.body
+	const { productId } = req.body
 	const userId = req.userId
 
 	const buyerUserSelect = {
@@ -708,7 +848,7 @@ getShippingInfo = async (req, res) => {
 		else if (!(buyerUsername = product.buyerUsername)) {
 			json = { status: constants.status.ERROR, errorMessage: constants.product.buyerUsernameIsNull }
 		}
-		else if (!(buyerUser = await User.find({username: buyerUsername}).select(buyerUserSelect))) {
+		else if (!(buyerUser = await User.find({ username: buyerUsername }).select(buyerUserSelect))) {
 			json = { status: constants.status.ERROR, errorMessage: cosntants.product.buyerUserDoesNotExist }
 		}
 		else {
