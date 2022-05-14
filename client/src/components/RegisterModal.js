@@ -4,7 +4,8 @@ import { Box, Modal, Button, TextField, Alert } from '@mui/material';
 import AuthContext from '../auth'
 import AccountErrorModal from './AccountErrorModal'
 import NumberFormat from 'react-number-format';
-
+import usePlacesAutocomplete, { getZipCode, getGeocode } from "use-places-autocomplete";
+import useOnclickOutside from "react-cool-onclickoutside";
 
 /*
     This modal is shown when the user register.
@@ -93,6 +94,67 @@ function RegisterModal() {
 		store.setCloseRegisterModal();
 	}
 
+	// USE-PLACES-AUTOCOMPLETE
+	// https://github.com/wellyshen/use-places-autocomplete
+	const {
+		ready,
+		value,
+		suggestions: { status, data },
+		setValue,
+		clearSuggestions,
+		} = usePlacesAutocomplete({
+		requestOptions: {
+			/* Define search scope here */
+		},
+		debounce: 300,
+	});
+	const ref = useOnclickOutside(() => {
+		// When user clicks outside of the component, we can dismiss
+		// the searched suggestions by calling this method
+		clearSuggestions();
+	});
+
+	const handleInput = (e) => {
+		// Update the keyword of the input element
+		setValue(e.target.value);
+	};
+
+	const handleSelect =
+	({ description }) =>
+	() => {
+		// When user selects a place, we can replace the keyword without request data from API
+		// by setting the second parameter to "false"
+		console.log(description);
+		var addresses = description.split(',');
+		setAddressFirst(addresses[0]);
+		setCity(addresses[1]);
+		setState(addresses[2]);
+		setValue(addresses[0], false);
+		clearSuggestions();
+
+		// Get latitude and longitude via utility functions
+		getGeocode({ address: description }).then((results) => {
+			const zipCode = getZipCode(results[0], false);
+			console.log("ZIP Code: ", zipCode);
+			setZipcode(zipCode);
+		});
+	};
+
+	const renderSuggestions = () =>
+	data.map((suggestion) => {
+		const {
+		place_id,
+		structured_formatting: { main_text, secondary_text },
+		} = suggestion;
+
+		return (
+		<div key={place_id} onClick={handleSelect(suggestion)} 
+			style={{ cursor: 'pointer', height: '30px', border: 'black 1px solid', backgroundColor: 'rgba(255,255,255,1)',  fontFamily: 'Quicksand', fontSize: '20px' }}>
+			<strong>{main_text}</strong> <small>{secondary_text}</small>
+		</div>
+		);
+	});
+
     let list = "";
     if(!cont) {
         list =
@@ -158,14 +220,25 @@ function RegisterModal() {
         <div>
             <Box>
                 <h1 style={{ margin: '100px 0px 0px 0px' }}>Enter Your Shipping Address</h1>
-                <TextField 
+                {/* <TextField 
                     required
                     name="addressFirstLine"
                     id="addressFirstLine"
                     label="Address Line 1" 
                     value={addressFirst} 
                     onChange={(event) => { setAddressFirst(event.target.value) }}
-                    style={{ margin: '15px 0px 0px 0px', float: 'left', width: '500px' }}></TextField>
+                    style={{ margin: '15px 0px 0px 0px', float: 'left', width: '500px' }}></TextField> */}
+				<div ref={ref}>
+					<TextField
+						value={value}
+						onChange={handleInput}
+						disabled={!ready}
+						label="Address Line 1"
+						style={{ position: 'relative', margin: '15px 0px 0px 0px', float: 'left', width: '500px' }}
+					/>
+					{/* We can use the "status" to decide whether we should display the dropdown or not */}
+					{status === "OK" && <div style={{ zIndex: '100', marginTop: '70px', position: 'absolute', width: '500px' }}>{renderSuggestions()}</div>}
+				</div>
                 <TextField 
                     name="addressSecondLine"
                     id="addressSecondLine"
@@ -215,13 +288,14 @@ function RegisterModal() {
                     style={{ margin: '15px 0px 0px 0px', float: 'left', width: '500px' }}></TextField> */}
 				<NumberFormat format="+1 (###) ###-####" mask="_" 
 					required
-					placeHolder=" Phone Number*"
+					placeholder=" Phone Number*"
 					name="phoneNumber"
 					id="phoneNumber"
 					label="Phone Number"  
 					value={phoneNumber} 
 					onChange={(event) => { setPhoneNumber(event.target.value) }}
-					style={{ marginTop: '15px', float: 'left', width: '495px', height: '45px', borderRadius: '3px' }}/>
+					style={{ paddingLeft: '10px', marginTop: '15px', float: 'left', width: '495px', height: '45px', borderRadius: '3px', fontFamily: 'Quicksand', fontSize: '20px' }}/>
+				
 					{registerAlert}
                 <Button onClick={handleBack} style={{ margin: '15px 20px 0px 0px', color: 'white', background: 'black', width: '150px', height: '40px', fontSize: '8px', borderRadius: '10px' }}><h1>Back</h1></Button>
                 <Button onClick={(event) => { handleRegister(event) }} style={{ cursor: 'pointer', margin: '15px 0px 0px 0px', color: 'white', background: 'black', width: '150px', height: '40px', fontSize: '8px', borderRadius: '10px' }}><h1>Register</h1></Button>
