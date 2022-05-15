@@ -421,13 +421,13 @@ export default function EditItem(){
 			// formData.append("image6", file6);
 			// formData.append("image7", file7);
 
-			
+			let images = [image0, image1, image2,image3,image4,image5,image6,image7]
 			let index = 0;
 			for(let i = 0; i < 8; i++) {
 				let str = "image" + i
 				const element = document.getElementById(str)
 				const file = element.files[0]
-				if(file !== undefined) {
+				if(images[i] !== null) {
 					formData.append("image" + index, file);
 					index++;
 				}
@@ -436,7 +436,7 @@ export default function EditItem(){
 				let str = "image" + i
 				const element = document.getElementById(str)
 				const file = element.files[0]
-				if(file === undefined) {
+				if(images[i] === null) {
 					formData.append("image" + index, file);
 					index++;
 				}
