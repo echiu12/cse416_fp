@@ -91,8 +91,7 @@ function AuthContextProvider(props) {
 				alert("ERROR: response.status=200, but response.body.status not recognized");
             }
         } catch (err) {
-			console.log(err)
-            alert("ERROR: something went really wrong");
+			alert("ERROR: something went really wrong");
         }
     }
 
@@ -124,8 +123,7 @@ function AuthContextProvider(props) {
             }
             
         } catch (err) {
-			console.log(err)
-            alert("ERROR: something went really wrong");
+			alert("ERROR: something went really wrong");
         }
     }
 
@@ -155,8 +153,7 @@ function AuthContextProvider(props) {
                 alert("ERROR: response.status=200, but response.body.status not recognized")
             }
         } catch (err) {
-			console.log(err)
-            alert("ERROR: something went really wrong")
+			alert("ERROR: something went really wrong")
         }
     }
 
