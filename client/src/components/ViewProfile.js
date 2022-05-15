@@ -144,7 +144,7 @@ export default function ViewMyProfile() {
 								<img onClick={() => { history.push("/product/" + index._id) }} src={index.image} alt="" style={{ cursor: 'pointer', width: '150px', height: '150px', borderRadius: '10%' }} ></img>
 							</div>
 							{/* ITEM INFO */}
-							<div>
+							<div style={{ margin: '-2px 0 0 40px' }}>
 								<div onClick={() => { history.push("/product/" + index._id) }} style={{ cursor: 'pointer', fontSize: '30px', fontWeight: 'bold' }}> 
 									{index.name.length > 11 ? index.name.substring(0,12) + "..." : index.name}
 								</div>

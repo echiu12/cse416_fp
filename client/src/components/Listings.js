@@ -40,7 +40,7 @@ export default function Listings() {
 			{/* EACH ITEM CARDS */}
 			<div style={{ margin: '3% 7%', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 0.5fr))' }}>
 				{items.map((index) => (
-					<div style={{ padding: '15px', margin: '5px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', minHeight: '100px', border: 'black 2px solid', borderRadius: '20px' }}>
+					<div style={{ padding: '15px', margin: '5px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', minHeight: '150px', border: 'black 2px solid', borderRadius: '20px' }}>
 						{/* ITEM IMAGE */}
 						<div style={{ position: 'absolute' }}>
 							<img onClick={() => { history.push("/product/" + index._id) }} src={index.image} 
