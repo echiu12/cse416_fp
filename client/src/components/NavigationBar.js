@@ -8,7 +8,7 @@ import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { MenuItem, Menu, AppBar, Toolbar, Box, Button } from '@mui/material';
 import AuthContext from '../auth';
-
+import api from '../api';
 
 export default function NavigationBar() {
     const { auth } = useContext(AuthContext);
@@ -33,6 +33,17 @@ export default function NavigationBar() {
         setAnchorEl(null);
     };
 
+	function handleListItem() {
+		//GET WALLET FOR USER
+		api.getWallets().then(function(result) {
+			if(result.data.wallets.length === 0) {
+				alert("You must set up a wallet before listing an item");
+			} else {
+				history.push("/listitem");
+			}
+		});
+	};
+
     /* cHECKS IF USER IS LOGGED IN TO DECIDE WHAT GOES ON BANNER */
     if(!auth.loggedIn) {
         navBarLoggedIn = 
@@ -51,7 +62,7 @@ export default function NavigationBar() {
         navBarLoggedIn = 
         <Box style={{ display: 'flex', float: 'right', margin: '60px 1vw 0px 7vw' }}>
 			{/* ADDED LIST ITEM BUTTON */}
-			<Button onClick={() => { history.push("/listitem") }} style={{ cursor: 'pointer', fontWeight: 'bold', fontSize: '10px', marginRight: '5vw', color: 'white', border: 'white 2px solid', borderRadius: '10px' }} >SELL ITEM</Button>
+			<Button onClick={handleListItem} style={{ cursor: 'pointer', fontWeight: 'bold', fontSize: '10px', marginRight: '5vw', color: 'white', border: 'white 2px solid', borderRadius: '10px' }} >SELL ITEM</Button>
             <ShoppingCartRoundedIcon onClick={() => { history.push("/cart") }} style={{ cursor: 'pointer', fontSize: '45px', marginRight: '5vw', padding: '10px' }}></ShoppingCartRoundedIcon>
             {profilePicture}
         </Box>   
