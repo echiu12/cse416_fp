@@ -145,7 +145,7 @@ export default function EditItem(){
 					<AddIcon></AddIcon>	
 				</div>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image0' id='image0' onChange={onImageChange0} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image0' id='image0' onChange={onImageChange0} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	} else {
 		box0 = 
@@ -153,7 +153,7 @@ export default function EditItem(){
 			<label for='image0' style={{ cursor: 'pointer' }}>
 				<img src={image0} alt="preview image0" style={{ width: '17vw', height: '17vw', border: 'black 1px solid', borderRadius: '10px'}}/>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image0' id='image0' onChange={onImageChange0} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image0' id='image0' onChange={onImageChange0} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	}
 	
@@ -173,7 +173,7 @@ export default function EditItem(){
 					<AddIcon></AddIcon>
 				</div>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image1' id='image1' onChange={onImageChange1} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image1' id='image1' onChange={onImageChange1} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	} else {
 		box1 = 
@@ -181,7 +181,7 @@ export default function EditItem(){
 			<label for='image1' style={{ cursor: 'pointer' }}>
 				<img src={image1} alt="preview image1" style={{ width: '17vw', height: '17vw', border: 'black 1px solid', borderRadius: '10px'}}/>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image1' id='image1' onChange={onImageChange1} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image1' id='image1' onChange={onImageChange1} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	}
 
@@ -201,7 +201,7 @@ export default function EditItem(){
 					<AddIcon></AddIcon>
 				</div>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image2' id='image2' onChange={onImageChange2} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image2' id='image2' onChange={onImageChange2} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	} else {
 		box2 = 
@@ -209,7 +209,7 @@ export default function EditItem(){
 			<label for='image2' style={{ cursor: 'pointer' }}>
 				<img src={image2} alt="preview image2" style={{ width: '17vw', height: '17vw', border: 'black 1px solid', borderRadius: '10px'}}/>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image2' id='image2' onChange={onImageChange2} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image2' id='image2' onChange={onImageChange2} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	}
 
@@ -229,7 +229,7 @@ export default function EditItem(){
 					<AddIcon></AddIcon>
 				</div>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image3' id='image3' onChange={onImageChange3} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image3' id='image3' onChange={onImageChange3} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	} else {
 		box3 = 
@@ -237,7 +237,7 @@ export default function EditItem(){
 			<label for='image3' style={{ cursor: 'pointer' }}>
 				<img src={image3} alt="preview image3" style={{ width: '17vw', height: '17vw', border: 'black 1px solid', borderRadius: '10px'}}/>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image3' id='image3' onChange={onImageChange3} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image3' id='image3' onChange={onImageChange3} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	}
 	
@@ -257,7 +257,7 @@ export default function EditItem(){
 					<AddIcon></AddIcon>
 				</div>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image4' id='image4' onChange={onImageChange4} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image4' id='image4' onChange={onImageChange4} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	} else {
 		box4 = 
@@ -265,7 +265,7 @@ export default function EditItem(){
 			<label for='image4' style={{ cursor: 'pointer' }}>
 				<img src={image4} alt="preview image4" style={{ width: '17vw', height: '17vw', border: 'black 1px solid', borderRadius: '10px'}}/>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image4' id='image4' onChange={onImageChange4} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image4' id='image4' onChange={onImageChange4} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	}
 	
@@ -285,7 +285,7 @@ export default function EditItem(){
 					<AddIcon></AddIcon>
 				</div>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image5' id='image5' onChange={onImageChange5} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image5' id='image5' onChange={onImageChange5} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	} else {
 		box5 = 
@@ -293,7 +293,7 @@ export default function EditItem(){
 			<label for='image5' style={{ cursor: 'pointer' }}>
 				<img src={image5} alt="preview image5" style={{ width: '17vw', height: '17vw', border: 'black 1px solid', borderRadius: '10px'}}/>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image5' id='image5' onChange={onImageChange5} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image5' id='image5' onChange={onImageChange5} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	}
 	
@@ -313,7 +313,7 @@ export default function EditItem(){
 					<AddIcon></AddIcon>
 				</div>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image6' id='image6' onChange={onImageChange6} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image6' id='image6' onChange={onImageChange6} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	} else {
 		box6 = 
@@ -321,7 +321,7 @@ export default function EditItem(){
 			<label for='image6' style={{ cursor: 'pointer' }}>
 				<img src={image6} alt="preview image6" style={{ width: '17vw', height: '17vw', border: 'black 1px solid', borderRadius: '10px'}}/>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image6' id='image6' onChange={onImageChange6} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image6' id='image6' onChange={onImageChange6} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	}
 
@@ -341,7 +341,7 @@ export default function EditItem(){
 					<AddIcon></AddIcon>
 				</div>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image7' id='image7' onChange={onImageChange7} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image7' id='image7' onChange={onImageChange7} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	} else {
 		box7 = 
@@ -349,7 +349,7 @@ export default function EditItem(){
 			<label for='image7' style={{ cursor: 'pointer' }}>
 				<img src={image7} alt="preview image7" style={{ width: '17vw', height: '17vw', border: 'black 1px solid', borderRadius: '10px'}}/>
 			</label>
-			<input accept="image/x-png,image/gif,image/jpeg" type='file' name='image7' id='image7' onChange={onImageChange7} style={{ display: 'none', visibility: 'none' }}></input>
+			<input accept="image/png,image/gif,image/jpeg" type='file' name='image7' id='image7' onChange={onImageChange7} style={{ display: 'none', visibility: 'none' }}></input>
 		</div>
 	}	
 

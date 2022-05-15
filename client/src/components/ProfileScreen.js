@@ -177,7 +177,7 @@ export default function ProfileScreen() {
                                 <label htmlFor="profilePicture">
                                     <div style={{ cursor: 'pointer' }}><u>Change Image</u></div>
                                 </label>
-                                <input accept="image/x-png,image/gif,image/jpeg" type='file' name='profilePicture' id='profilePicture' onChange={handleChangeImage} style={{ display: 'none', visibility: 'none' }}></input>  
+                                <input accept="image/png,image/gif,image/jpeg" type='file' name='profilePicture' id='profilePicture' onChange={handleChangeImage} style={{ display: 'none', visibility: 'none' }}></input>  
                         
                             </div>
                         </div>
