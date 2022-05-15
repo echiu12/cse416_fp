@@ -46,7 +46,7 @@ export default function EditItem(){
     const pathname = window.location.pathname;
     const productId = pathname.split("/").pop();
 
-	// let setImages = [setImage0, setImage1, setImage2, setImage3, setImage4, setImage5, setImage6, setImage7]
+	//let setImages = [setImage0, setImage1, setImage2, setImage3, setImage4, setImage5, setImage6, setImage7]
 
     /* GET PRODUCT BY ID */
     useEffect(() => {
@@ -90,12 +90,11 @@ export default function EditItem(){
 					setImage2(result.data.product.images[2]);
 					setImage3(result.data.product.images[3]);
 					setImage4(result.data.product.images[4]);
-					setImage5(result.data.product.images[5]);
 					setImage6(result.data.product.images[6]);
 					setImage7(result.data.product.images[7]);
 					// for(let i = 0; i < result.data.product.images.length; i++) {
 					// 	if(result.data.product.images[i]) {
-					// 		setImages[i](result.data.product.images[i]);
+					// 		setImages[i](URL.createObjectURL(result.data.product.images[i]));
 					// 	}
 					// }
                 });
@@ -421,7 +420,7 @@ export default function EditItem(){
 			// formData.append("image6", file6);
 			// formData.append("image7", file7);
 
-			let images = [image0, image1, image2,image3,image4,image5,image6,image7]
+			let images = [image0, image1, image2, image3, image4, image5, image6, image7]
 			let index = 0;
 			for(let i = 0; i < 8; i++) {
 				let str = "image" + i
