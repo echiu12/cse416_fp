@@ -183,7 +183,7 @@ export default function NavigationBar() {
                             Cryptocurrency
                         </div>
                     </div>
-                    <TextField className="search-bar" 
+                    {/* <TextField className="search-bar" 
                             sx={{ width: '60vw', bgcolor:'white' }}
                             style={{ margin: '70px 0px 0px 0px', float: 'right', borderRadius: '10px' }}
                             placeholder="Search..."
