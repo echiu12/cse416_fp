@@ -36,17 +36,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    // fileFilter:  async (req, file, cb) => {
-    // 	const mimetype = file.mimetype
-    // 	const extension = mime.extension(mimetype)
-    // 	if (mimetype == "image/png" || mimetype == "image/jpeg") {
-    // 		cb(null, true)
-    // 	}
-    // 	else {
-    // 		cb(null, false)
-    // 		// cb(new Error('File is not .png or .jpeg format'))
-    // 	}
-    // }
+    fileFilter:  async (req, file, cb) => {
+    	const mimetype = file.mimetype
+    	const extension = mime.extension(mimetype)
+    	if (mimetype == "image/png" || mimetype == "image/jpeg") {
+    		cb(null, true)
+    	}
+    	else {
+    		cb(null, false)
+    		// cb(new Error('File is not .png or .jpeg format'))
+    	}
+    }
 })
 
 // createAndSaveImage = async (file, description) => {
