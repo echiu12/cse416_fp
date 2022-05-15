@@ -191,6 +191,8 @@ export default function NavigationBar() {
                                 handleSearch(event)
                             }}
                     >
+						<i className="fa fa-search"></i></button>
+						<div className="spinner"><i className="fa fa-spinner"></i></div>
                     </TextField>
 					
 					{/* <div id="search">
