@@ -102,6 +102,22 @@ getProducts = async (productIds, selectOptions) => {
 	return products.filter(product => product)
 }
 
+isValidTrackingNumber = (trackingNumber) => {
+    try {
+        const trackingNumberStr = trackingNumber.value.toString()
+        let result = false
+        if (trackingString.startsWith("94001") && trackingString.length === 22) {
+            result = true
+        }
+        else if (trackingString.startsWith("92055") && trackingString.length === 22) {
+            result = true
+        }
+        return result
+    } catch (error) {
+        return false
+    }
+}
+
 module.exports = {
 	productImageMiddleware, 
 	updateProductImageFields, 

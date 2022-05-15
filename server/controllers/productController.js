@@ -890,6 +890,9 @@ setTrackingNumber = async (req, res) => {
 		else if (product.trackingNumber) {
 			json = { status: constants.status.ERROR, errorMessage: constants.product.trackingNumberIsAlreadySet }
 		}
+        else if (!isValidTrackingNumber) {
+            json = { status: constants.status.ERROR, errorMessage: constants.product.invalidTrackingNumber }
+        }
 		else {
 			product.trackingNumber = trackingNumber
 			await product.save()

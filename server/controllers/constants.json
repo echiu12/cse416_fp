@@ -43,7 +43,8 @@
 		"failToGetSearchApi":"FAILED TO GET SEARCH API ",
 		"productIsNotSold": "PRODUCT HAS NOT SOLD",
 		"buyerUsernameIsNull": "BUYER USERNAME IS NULL",
-		"trackingNumberIsAlreadySet": "TRACKING NUMBER IS ALREADY SET"
+		"trackingNumberIsAlreadySet": "TRACKING NUMBER IS ALREADY SET",
+        "invalidTrackingNumber": "INVALID TRACKING NUMBER"
 	},
 	"purchase": {
 		"missingRequiredField": "MISSING REQUIRED FIELD",
