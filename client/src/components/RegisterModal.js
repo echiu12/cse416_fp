@@ -295,7 +295,7 @@ function RegisterModal() {
 					value={phoneNumber} 
 					// onChange={(event) => { setPhoneNumber(event.target.value) }}
 					onValueChange={(values) => { setPhoneNumber(values.value) }}
-					style={{ paddingLeft: '10px', marginTop: '15px', float: 'left', width: '495px', height: '45px', borderRadius: '3px', fontFamily: 'Quicksand', fontSize: '20px' }}/>
+					style={{ paddingLeft: '10px', marginTop: '15px', float: 'left', width: '486px', height: '45px', border: '#D0D0D0 1px solid', borderRadius: '3px', fontFamily: 'sans-serif', fontSize: '16px' }}/>
 				
 					{registerAlert}
                 <Button onClick={handleBack} style={{ margin: '15px 20px 0px 0px', color: 'white', background: 'black', width: '150px', height: '40px', fontSize: '8px', borderRadius: '10px' }}><h1>Back</h1></Button>

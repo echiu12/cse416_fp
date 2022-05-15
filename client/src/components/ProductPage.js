@@ -121,7 +121,7 @@ export default function ProductPage() {
                         onClick={e => { handleImage(e) }} title={index.title} width="100px" height="100px" style={{ cursor: "pointer", borderRadius: '10%', border: "black 2px solid" }} 
 						onMouseEnter={e => { handleItemHover("propic" + indexNum)}}
 						onMouseLeave={e => { handleItemLeave("propic" + indexNum)}}></img>
-                    </div>:<div key={indexNum}></div>
+                    </div>:""
             ))}
         </div>;
 
