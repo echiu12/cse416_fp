@@ -7,7 +7,6 @@ const xml2js = require('xml2js')
 const axios = require("axios")
 const Cart = require('../models/cartModel')
 const { Order, OrderState} = require('../models/orderModel')
-const {ObjectId} = require('mongodb');
 
 const {
 	productImageMiddleware,
@@ -18,9 +17,9 @@ const {
 } = require('./helpers/productControllerHelper')
 
 getCatalog = async (req, res) => {
-	console.log("getCatalog2", req.body)
+	console.log("getCatalog", req.body)
 	const { search, categories, conditions, minPrice, maxPrice, sortBy } = req.body
-
+		
 	products = await Product.find().lean();
 	product_titles = products.map(product => product.name);
 	product_ids = products.map(product => product._id.toString());
