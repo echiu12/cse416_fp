@@ -125,6 +125,27 @@ export default function NavigationBar() {
         }
     }
 
+    async function handleSearchClick(elem) {
+		console.log("hi");
+		var searchBar = document.getElementById(elem);
+		
+		if (searchBar) {
+			var searchBarValue = searchBar.value;
+			let json = {
+				search: searchBarValue,
+				categories: null,
+				conditions: null,
+				minPrice: undefined,
+				maxPrice: undefined,
+				sortBy: null
+			}
+			let search = document.getElementById("search");
+			search.classList.add("loading");
+			await store.loadItems(json);
+			search.classList.remove("loading");
+		}
+	}
+
     /* MENU DISPLAY */
     const loggedInMenu = 
         <Menu
