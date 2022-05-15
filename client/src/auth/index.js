@@ -111,7 +111,7 @@ function AuthContextProvider(props) {
                     }
                 })
                 // alert("Successfully Registered");
-                store.initalLoad();
+                store.initialLoad();
                 history.push("/");
             }
             else if (response.data.status === "ERROR") {

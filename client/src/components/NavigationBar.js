@@ -183,7 +183,7 @@ export default function NavigationBar() {
                             Cryptocurrency
                         </div>
                     </div>
-                    {/* <TextField className="search-bar" 
+                    <TextField className="search-bar" 
                             sx={{ width: '60vw', bgcolor:'white' }}
                             style={{ margin: '70px 0px 0px 0px', float: 'right', borderRadius: '10px' }}
                             placeholder="Search..."
@@ -191,9 +191,9 @@ export default function NavigationBar() {
                                 handleSearch(event)
                             }}
                     >
-                    </TextField> */}
+                    </TextField>
 					
-					<div id="search">
+					{/* <div id="search">
 						<input id="input" placeholder="Search..." 
 						onKeyPress={(event) => {
                                 handleSearch(event)
@@ -204,7 +204,7 @@ export default function NavigationBar() {
 						}}
 						><i className="fa fa-search"></i></button>
 						<div className="spinner"><i className="fa fa-spinner"></i></div>
-					</div>
+					</div> */}
 
 					{navBarLoggedIn}
 				</Toolbar>
